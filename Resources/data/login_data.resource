@@ -1,0 +1,7 @@
+*** Variables ***
+
+${invalidUser}    invalid_user@email.com
+${invalidPassword}    123456
+${user}    tester@bugbank.com
+${password}    Qlt123!
+${name}    Gustavo Damico
