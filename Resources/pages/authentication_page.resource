@@ -5,6 +5,7 @@ Resource    ../data/login_data.resource
 Resource    ../locators/register_locators.resource
 Resource    ../locators/authentication_locators.resource
 Resource    ../locators/index_locators.resource
+Resource    ../utils/notifications.resource
 
 *** Variables ***
 ${nome}
@@ -55,3 +56,58 @@ Validar informações da conta
     ${numero_conta}    Get Text    ${index.accountNumber}
     Should Be Equal As Strings   ${nome}    ${name}
     Should Be Equal As Strings    ${account}    ${numero_conta}
+
+Tentar fazer login sem preencher nenhum campo
+    [Documentation]    Aciona o botão "Acessar" sem preencher nenhum campo
+    Wait Until Element Is Visible    ${authentication.headerTitle}
+    Clear Element Text    ${authentication.inputEmail}
+    Clear Element Text    ${authentication.inputPassword}
+    Click Button  ${authentication.buttonAccess}
+    ${notificacaoEmail}    Get Text    ${authentication.warningEmailRequired}
+    ${notificacaoSenha}    Get Text    ${authentication.warningPassRequired}
+    Sleep    2s
+    Validar notificação de obrigatoriedade dos campos de Login    ${notificacaoEmail}    ${notificacaoSenha}
+
+Tentar se registrar sem preencher nenhum campo
+    [Documentation]    Aciona o botão "Cadastrar" sem preencher nenhum campo
+    Wait Until Element Is Visible    ${authentication.headerTitle}
+    Click Element    ${authentication.buttonRegister}
+    Sleep    2s
+    Click Element    ${register.buttonRegister}
+    ${notificacaoEmail}    Get Text    ${register.warningEmailRequired}
+    ${notificacaoSenha}    Get Text    ${register.warningPassRequired}
+    ${notificacaoConfirmacaoSenha}    Get Text    ${register.warningPassRequired}
+    Validar notificação de obrigatoriedade dos campos para cadastro    ${notificacaoEmail}    ${notificacaoSenha}    ${notificacaoConfirmacaoSenha}
+
+Tentar se registrar sem preencher o campo 'Nome'
+    [Documentation]
+    Wait Until Element Is Visible    ${authentication.headerTitle}
+    Click Element    ${authentication.buttonRegister}
+    Input Text    ${register.inputEmail}    ${user}
+    Input Text    ${register.inputPassword}    ${password}
+    Input Text    ${register.inputPasswordConfirmation}    ${password}
+    Sleep    2s
+    Click Element    ${register.buttonRegister}
+    Wait Until Element Is Visible    ${register.cardNameRequired}
+    ${notificacaoNome}    Get Text    ${register.cardNameRequired}
+    Validar notificação de obrigatoriedade do campo 'Nome' para cadastrar-se    ${notificacaoNome}
+
+Validar notificação de obrigatoriedade dos campos de Login
+    [Documentation]    Verificar que o texto das notificações esteja conforme o esperado
+    [Arguments]    ${notificacaoEmail}    ${notificacaoSenha}
+    Should Be Equal    ${notificacaoEmail}    ${campoObrigatorio}
+    Should Be Equal    ${notificacaoSenha}    ${campoObrigatorio}
+
+Validar notificação de obrigatoriedade dos campos para cadastro
+    [Documentation]    Verificar que o texto das notificações esteja conforme o esperado
+    [Arguments]    ${notificacaoEmail}    ${notificacaoSenha}    ${notificacaoConfirmacaoSenha}
+    Should Be Equal    ${notificacaoEmail}    ${campoObrigatorio}
+    Should Be Equal    ${notificacaoSenha}    ${campoObrigatorio}
+    Should Be Equal    ${notificacaoConfirmacaoSenha}    ${campoObrigatorio}
+
+Validar notificação de obrigatoriedade do campo 'Nome' para cadastrar-se
+    [Documentation]    Verificar que caso o campo 'Nome' não esteja preenchido, seja exibido um card
+    ...                e o texto da notificação esteja conforme o esperado
+    [Arguments]    ${notificacaoNome}
+    Should Be Equal    ${notificacaoNome}    ${nomeNaoPodeSerVazio}
+    Click Element    ${register.buttonClose}
