@@ -4,6 +4,7 @@
 ...            inputName=//div[@class='card__register']/form/div/input[@name='name']
 ...            inputPassword=//div[@class='card__register']/form/div/div/input[@name='password']
 ...            inputPasswordConfirmation=//div[@class='card__register']/form/div/div/input[@name='passwordConfirmation']
+...            toggleBalance=toggleAddBalance
 ...            buttonRegister=//div[@class='card__register']/form/button
 ...            cardSuccess=//p[@id='modalText']
 ...            buttonClose=btnCloseModal

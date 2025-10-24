@@ -14,7 +14,8 @@ ${account}
 
 *** Keywords ***
 Realizar novo cadastro
-    [Documentation]    Realiza o cadastro de uma nova conta sem saldo
+    [Documentation]    Realiza o cadastro de uma nova conta com ou sem saldo
+    [Arguments]    ${balance}=${False}
     Wait Until Element Is Visible    ${authentication.buttonRegister}
     Click Element    ${authentication.buttonRegister}
     Sleep    2s
@@ -22,6 +23,9 @@ Realizar novo cadastro
     Input Text    ${register.inputName}    ${name}
     Input Text    ${register.inputPassword}    ${password}
     Input Text    ${register.inputPasswordConfirmation}    ${password}
+    IF    '${balance}' == '${True}'
+        Click Element    ${register.toggleBalance}
+    END
     Wait Until Keyword Succeeds    5x    1s    Click Element    ${register.buttonRegister}
     Verificar sucesso ao realizar novo cadastro
 
